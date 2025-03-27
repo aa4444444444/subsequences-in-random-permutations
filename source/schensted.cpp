@@ -27,6 +27,12 @@ std::pair<size_t, size_t> Schensted::longestSubsequences(std::vector<size_t>& se
     return std::pair<size_t, size_t> { m_youngTableaux[0]->rowValues.size(), m_youngTableaux.size() };
 }
 
+/**
+ * @brief Adds a value to the young tableaux
+ *
+ * @param value Value to add to the tableaux
+ * @param rowIndex Index of row in the tableaux to add the value to
+ */
 void Schensted::addToTableaux(size_t value, size_t rowIndex)
 {
     if (m_youngTableaux.size() == rowIndex) {

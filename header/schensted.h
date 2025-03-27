@@ -7,6 +7,10 @@
 #include <utility>
 #include <vector>
 
+/**
+ * @brief Represents a row in the young tableaux
+ *
+ */
 struct TableauxRow {
     std::vector<size_t> rowValues;
     size_t maxElement;
@@ -26,6 +30,9 @@ struct TableauxRow {
  *
  * Constructs a Young tableau by successively inserting the values of the permutation according to a
  * specific rule, while the other tableau records the evolution of the shape during construction.
+ *
+ * The Schensted algorithm can tell us the length of the longest increasing/decreasing subsequences,
+ * BUT IT CANNOT tell us what those subsequences are. Only the length.
  *
  */
 class Schensted {
