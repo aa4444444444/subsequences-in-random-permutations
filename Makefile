@@ -12,7 +12,7 @@ TARGET_DEL = main.exe
 
 # Source files
 define SRCS 
-source/main.cpp
+source/main.cpp source/schensted.cpp
 endef
 
 # Header only files that we depend on
