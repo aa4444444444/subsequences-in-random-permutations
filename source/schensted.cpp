@@ -43,38 +43,17 @@ void Schensted::addToTableaux(size_t value, size_t rowIndex)
 
     TableauxRow* currentRow = m_youngTableaux[rowIndex];
 
-    if (currentRow->rowValues.size() == 0) {
-        // Row exists, but is empty -- we can simply add
+    auto it = std::lower_bound(currentRow->rowValues.begin(), currentRow->rowValues.end(), value);
+
+    if (it == currentRow->rowValues.end()) {
+        // If `value` is larger than all existing values, append
         currentRow->rowValues.push_back(value);
         currentRow->maxElement = value;
     } else {
-        // Guaranteed to not be equal since it's permutation of numbers from 1 to n
-        if (value > currentRow->maxElement) {
-            // If larger than all other values we can simply add
-            currentRow->rowValues.push_back(value);
-            currentRow->maxElement = value;
-        } else {
-            if (currentRow->rowValues.size() == 1) {
-                size_t replacedValue = currentRow->rowValues[0];
-                currentRow->rowValues[0] = value;
-                currentRow->maxElement = value;
-                addToTableaux(replacedValue, rowIndex + 1);
-            } else {
-                for (size_t i = 0; i < currentRow->rowValues.size(); i++) {
-                    if (i == (currentRow->rowValues.size() - 1)) {
-                        size_t replacedValue = currentRow->rowValues[i];
-                        currentRow->rowValues[i] = value;
-                        currentRow->maxElement = value;
-                        addToTableaux(replacedValue, rowIndex + 1);
-                    }
-                    if (value < currentRow->rowValues[i]) {
-                        size_t replacedValue = currentRow->rowValues[i];
-                        currentRow->rowValues[i] = value;
-                        addToTableaux(replacedValue, rowIndex + 1);
-                        break;
-                    }
-                }
-            }
-        }
+        // Replace the found element and recurse
+        size_t replacedValue = *it;
+        *it = value;
+
+        addToTableaux(replacedValue, rowIndex + 1);
     }
 }

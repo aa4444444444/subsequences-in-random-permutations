@@ -1,8 +1,11 @@
 # Compiler
 CXX = g++
 
+# pbPlots Location
+PBPLOTS = tplibs/
+
 # Compiler flags
-CXXFLAGS = -Wall -g
+CXXFLAGS = -Wall -g -I $(PBPLOTS)
 
 # Target executable
 TARGET = main
@@ -13,6 +16,7 @@ TARGET_DEL = main.exe
 # Source files
 define SRCS 
 source/main.cpp source/schensted.cpp source/permutation.cpp
+tplibs/pbPlots.cpp tplibs/supportLib.cpp
 endef
 
 # Header only files that we depend on
