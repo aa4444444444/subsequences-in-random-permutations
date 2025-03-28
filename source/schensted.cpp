@@ -57,12 +57,14 @@ void Schensted::addToTableaux(size_t value, size_t rowIndex)
             if (currentRow->rowValues.size() == 1) {
                 size_t replacedValue = currentRow->rowValues[0];
                 currentRow->rowValues[0] = value;
+                currentRow->maxElement = value;
                 addToTableaux(replacedValue, rowIndex + 1);
             } else {
                 for (size_t i = 0; i < currentRow->rowValues.size(); i++) {
                     if (i == (currentRow->rowValues.size() - 1)) {
                         size_t replacedValue = currentRow->rowValues[i];
                         currentRow->rowValues[i] = value;
+                        currentRow->maxElement = value;
                         addToTableaux(replacedValue, rowIndex + 1);
                     }
                     if (value < currentRow->rowValues[i]) {

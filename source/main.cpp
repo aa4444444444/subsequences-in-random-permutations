@@ -1,10 +1,15 @@
+#include "../header/permutation.h"
 #include "../header/schensted.h"
 #include <cstddef>
 #include <iostream>
 
 int main()
 {
-    std::vector<size_t> sequence { 2, 4, 7, 3, 6, 9, 8, 1, 5 };
+    std::vector<size_t> sequence = getPermutation(50);
+    for (size_t val : sequence) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
 
     // Once we get a monotone subsequence, we need to perform THREE checks:
     // 1. Check if the length is equivalent to the length calculated by the Schensted algorithm.
