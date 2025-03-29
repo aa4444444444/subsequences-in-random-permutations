@@ -5,16 +5,13 @@
 #include <cstddef>
 #include <iostream>
 
-#define NUM_REPEATED_TRIALS 1
+#define NUM_REPEATED_TRIALS 1000
 #define NUM_POWERS_OF_TWO 15
 
 int main()
 {
     // Initialize plotted image ref
     RGBABitmapImageReference* imageRef = CreateRGBABitmapImageReference();
-
-    // Calculate length of longest increasing/decreasing subsequence using Schensted
-    Schensted schensted;
 
     std::vector<double> nValues;
     std::vector<double> averageLongestIncreasingSubsequence;
@@ -23,13 +20,16 @@ int main()
     // 1 to n
     for (size_t i = 1; i <= NUM_POWERS_OF_TWO; i++) {
 
-        double sumOfIncreasingSubsequenceLengths = 0.0;
-        double sumOfDecreasingSubsequenceLengths = 0.0;
+        size_t sumOfIncreasingSubsequenceLengths = 0;
+        size_t sumOfDecreasingSubsequenceLengths = 0;
 
         double twoToTheI = pow(2, i);
 
         // Repeated trials
         for (size_t rt = 0; rt < NUM_REPEATED_TRIALS; rt++) {
+            // Calculate length of longest increasing/decreasing subsequence using Schensted
+            Schensted schensted;
+
             std::vector<size_t> permutedSequence = getPermutation(twoToTheI);
             std::pair<size_t, size_t> longestSubsequences = schensted.longestSubsequences(permutedSequence);
 
