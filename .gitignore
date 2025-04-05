@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# Ignore third-party libraries
+tplibs/*
+
+# VS Code
+.vscode/*
