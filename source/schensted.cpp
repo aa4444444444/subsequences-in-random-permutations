@@ -4,9 +4,9 @@ Schensted::Schensted() { }
 
 Schensted::~Schensted()
 {
-    for (size_t i = 0; i < m_youngTableaux.size(); i++) {
-        if (m_youngTableaux[i] != nullptr) {
-            delete m_youngTableaux[i];
+    for (size_t i = 0; i < m_youngTableau.size(); i++) {
+        if (m_youngTableau[i] != nullptr) {
+            delete m_youngTableau[i];
         }
     }
 }
@@ -21,10 +21,10 @@ Schensted::~Schensted()
 std::pair<size_t, size_t> Schensted::longestSubsequences(std::vector<size_t>& sequence)
 {
     for (size_t i = 0; i < sequence.size(); i++) {
-        addToTableaux(sequence[i], 0);
+        addToTableau(sequence[i], 0);
     }
 
-    return std::pair<size_t, size_t> { m_youngTableaux[0]->rowValues.size(), m_youngTableaux.size() };
+    return std::pair<size_t, size_t> { m_youngTableau[0]->rowValues.size(), m_youngTableau.size() };
 }
 
 /**
@@ -33,20 +33,20 @@ std::pair<size_t, size_t> Schensted::longestSubsequences(std::vector<size_t>& se
  * @param value Value to add to the tableaux
  * @param rowIndex Index of row in the tableaux to add the value to
  */
-void Schensted::addToTableaux(size_t value, size_t rowIndex)
+void Schensted::addToTableau(size_t value, size_t rowIndex)
 {
-    if (m_youngTableaux.size() == rowIndex) {
+    if (m_youngTableau.size() == rowIndex) {
         // No row in the young tableaux for the row index
-        TableauxRow* tableauxRow = new TableauxRow();
-        m_youngTableaux.push_back(tableauxRow);
+        TableauRow* tableauRow = new TableauRow();
+        m_youngTableau.push_back(tableauRow);
     }
 
-    TableauxRow* currentRow = m_youngTableaux[rowIndex];
+    TableauRow* currentRow = m_youngTableau[rowIndex];
 
     auto it = std::lower_bound(currentRow->rowValues.begin(), currentRow->rowValues.end(), value);
 
     if (it == currentRow->rowValues.end()) {
-        // If `value` is larger than all existing values, append
+        // If value is larger than all existing values, append
         currentRow->rowValues.push_back(value);
         currentRow->maxElement = value;
     } else {
@@ -54,6 +54,6 @@ void Schensted::addToTableaux(size_t value, size_t rowIndex)
         size_t replacedValue = *it;
         *it = value;
 
-        addToTableaux(replacedValue, rowIndex + 1);
+        addToTableau(replacedValue, rowIndex + 1);
     }
 }

@@ -11,11 +11,11 @@
  * @brief Represents a row in the young tableaux
  *
  */
-struct TableauxRow {
+struct TableauRow {
     std::vector<size_t> rowValues;
     size_t maxElement;
 
-    TableauxRow() { }
+    TableauRow() { }
     void print()
     {
         for (size_t i = 0; i < rowValues.size(); i++) {
@@ -47,10 +47,11 @@ public:
     std::pair<size_t, size_t> longestSubsequences(std::vector<size_t>& sequence);
 
 private:
-    std::vector<TableauxRow*> m_youngTableaux;
+    /** The resulting Young Tableau */
+    std::vector<TableauRow*> m_youngTableau;
 
-    /** Adds a value to the increasing young tableaux */
-    void addToTableaux(size_t value, size_t rowIndex);
+    /** Adds a value to the increasing young tableau */
+    void addToTableau(size_t value, size_t rowIndex);
 };
 
 #endif
