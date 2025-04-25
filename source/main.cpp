@@ -21,6 +21,16 @@ int main()
     std::vector<double> averageLongestDecreasingSubsequence; // y-axis
     std::vector<double> averageLongestMonotonicSubsequence; // y-axis
 
+    // Calculating variances
+    std::vector<double> longestIncreasingSubsequenceVariance;
+    std::vector<double> longestDecreasingSubsequenceVariance;
+    std::vector<double> longestMonotonicSubsequenceVariance;
+
+    // Keeping track of individual longest subsequences to calculate variance
+    std::vector<size_t> longestIncreasingSubsequenceList;
+    std::vector<size_t> longestDecreasingSubsequenceList;
+    std::vector<size_t> longestMonotonicSubsequenceList;
+
     // We are choosing different powers of 2, i.e. n = 2, 4, 8, 16,...
     for (size_t i = 1; i <= NUM_POWERS_OF_TWO; i++) {
 
@@ -42,14 +52,56 @@ int main()
             sumOfIncreasingSubsequenceLengths += longestSubsequences.first;
             sumOfDecreasingSubsequenceLengths += longestSubsequences.second;
             sumOfMonotonicSubsequenceLengths += std::max(longestSubsequences.first, longestSubsequences.second);
+
+            // Add to list
+            longestIncreasingSubsequenceList.push_back(longestSubsequences.first);
+            longestDecreasingSubsequenceList.push_back(longestSubsequences.second);
+            longestMonotonicSubsequenceList.push_back(std::max(longestSubsequences.first, longestSubsequences.second));
         }
 
         nValues.push_back(twoToTheI);
 
         // Averaged trials
-        averageLongestIncreasingSubsequence.push_back(sumOfIncreasingSubsequenceLengths / (NUM_REPEATED_TRIALS * 1.0));
-        averageLongestDecreasingSubsequence.push_back(sumOfDecreasingSubsequenceLengths / (NUM_REPEATED_TRIALS * 1.0));
-        averageLongestMonotonicSubsequence.push_back(sumOfMonotonicSubsequenceLengths / (NUM_REPEATED_TRIALS * 1.0));
+        double increasingAverage = sumOfIncreasingSubsequenceLengths / (NUM_REPEATED_TRIALS * 1.0);
+        double decreasingAverage = sumOfDecreasingSubsequenceLengths / (NUM_REPEATED_TRIALS * 1.0);
+        double monotonicAverage = sumOfMonotonicSubsequenceLengths / (NUM_REPEATED_TRIALS * 1.0);
+        averageLongestIncreasingSubsequence.push_back(increasingAverage);
+        averageLongestDecreasingSubsequence.push_back(decreasingAverage);
+        averageLongestMonotonicSubsequence.push_back(monotonicAverage);
+
+        // Variance
+        double increasingVariance;
+        double decreasingVariance;
+        double monotonicVariance;
+        // Since all lists have the same size, we can just use the size of one
+        for (size_t i = 0; i < longestIncreasingSubsequenceList.size(); i++) {
+            double differenceFromMeanSquaredIncreasing = (longestIncreasingSubsequenceList[i] - increasingAverage)
+                * (longestIncreasingSubsequenceList[i] - increasingAverage);
+
+            double differenceFromMeanSquaredDecreasing = (longestDecreasingSubsequenceList[i] - decreasingAverage)
+                * (longestDecreasingSubsequenceList[i] - decreasingAverage);
+
+            double differenceFromMeanSquaredMonotonic = (longestMonotonicSubsequenceList[i] - monotonicAverage)
+                * (longestMonotonicSubsequenceList[i] - monotonicAverage);
+
+            increasingVariance += differenceFromMeanSquaredIncreasing;
+            decreasingVariance += differenceFromMeanSquaredDecreasing;
+            monotonicVariance += differenceFromMeanSquaredMonotonic;
+        }
+
+        // Divide by n-1 since this is the sample variance not population variance
+        increasingVariance /= (NUM_REPEATED_TRIALS - 1);
+        decreasingVariance /= (NUM_REPEATED_TRIALS - 1);
+        monotonicVariance /= (NUM_REPEATED_TRIALS - 1);
+
+        longestIncreasingSubsequenceVariance.push_back(increasingVariance);
+        longestDecreasingSubsequenceVariance.push_back(decreasingVariance);
+        longestMonotonicSubsequenceVariance.push_back(monotonicVariance);
+
+        // Clear subsequence lists for next loop
+        longestIncreasingSubsequenceList.clear();
+        longestDecreasingSubsequenceList.clear();
+        longestMonotonicSubsequenceList.clear();
     }
 
     // Drawing scatter plot
@@ -62,20 +114,26 @@ int main()
 
     // Print out the values for more detail
     std::cout << "Longest Increasing Subsequence Values: " << std::endl;
+    std::cout << "=============================================" << std::endl;
     for (size_t i = 0; i < nValues.size(); i++) {
-        std::cout << "(" << nValues[i] << ", " << averageLongestIncreasingSubsequence[i] << ")";
+        std::cout << "n = " << nValues[i] << ", mean = " << averageLongestIncreasingSubsequence[i]
+                  << ", variance = " << longestIncreasingSubsequenceVariance[i] << std::endl;
     }
     std::cout << std::endl;
 
     std::cout << "Longest Decreasing Subsequence Values: " << std::endl;
+    std::cout << "=============================================" << std::endl;
     for (size_t i = 0; i < nValues.size(); i++) {
-        std::cout << "(" << nValues[i] << ", " << averageLongestDecreasingSubsequence[i] << ")";
+        std::cout << "n = " << nValues[i] << ", mean = " << averageLongestDecreasingSubsequence[i]
+                  << ", variance = " << longestDecreasingSubsequenceVariance[i] << std::endl;
     }
     std::cout << std::endl;
 
     std::cout << "Longest Monotonic Subsequence Values: " << std::endl;
+    std::cout << "=============================================" << std::endl;
     for (size_t i = 0; i < nValues.size(); i++) {
-        std::cout << "(" << nValues[i] << ", " << averageLongestMonotonicSubsequence[i] << ")";
+        std::cout << "n = " << nValues[i] << ", mean = " << averageLongestMonotonicSubsequence[i]
+                  << ", variance = " << longestMonotonicSubsequenceVariance[i] << std::endl;
     }
     std::cout << std::endl;
 
